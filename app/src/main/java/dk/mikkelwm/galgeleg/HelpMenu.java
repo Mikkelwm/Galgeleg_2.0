@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class HelpMenu extends AppCompatActivity {
+public class HelpMenu extends AppCompatActivity implements View.OnClickListener{
     TextView textView;
     Button menuButton;
     Intent intent;

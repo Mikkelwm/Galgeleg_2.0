@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Galgeleg extends AppCompatActivity {
+public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
 
     Button guess;
     Button endGame;
@@ -27,11 +27,8 @@ public class Galgeleg extends AppCompatActivity {
     TextView gameOutcomeMsg;
 
     EditText editText;
-
     Galgelogik galgelogik;
-
     ImageView imageView;
-
     Intent intent;
 
     @Override
@@ -75,6 +72,8 @@ public class Galgeleg extends AppCompatActivity {
         guess.setOnClickListener(this);
         newGame.setOnClickListener(this);
         endGame.setOnClickListener(this);
+
+
     }
     @Override
     public void onClick(View v) {
@@ -103,7 +102,7 @@ public class Galgeleg extends AppCompatActivity {
         //Nulstiller alle værdier i UI samt sætter udfalds beskeden+nytspil/afslut spil knappernes visibility
         if (v == newGame) {
             galgelogik.startNytSpil();
-            secretWord.setText("Gæt igen :)");
+            secretWord.setText("Guess again :)");
             feedbackText.setText("");
             usedLetters.setText("");
             nmbrOfWrongGuesses.setText("");
@@ -123,14 +122,14 @@ public class Galgeleg extends AppCompatActivity {
         usedLetterList = galgelogik.getBrugteBogstaver();
         for (int i = 0; i <= usedLetterList.size() - 1; i++) {
             used.append(usedLetterList.get(i)).append(", ");
-            usedLetters.setText("Tidligere gæt:\n"+used);
+            usedLetters.setText("previous guesses:\n"+used);
         }
     }
 
     //Skjuler keyboard, Udskriver vinder/taber besked, gør nytspil/afslutspil knapperne synlige
     private void isWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
-            String winnerStr = "DU VANDT!";
+            String winnerStr = "YOU WON!";
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -140,8 +139,8 @@ public class Galgeleg extends AppCompatActivity {
             gameOutcomeMsg.setText(winnerStr);
 
         } else if (galgelogik.erSpilletTabt()) {
-            secretWord.setText("Ordet var: "+galgelogik.getOrdet());
-            String loserString = "DU TABTE!";
+            secretWord.setText("The word was: "+galgelogik.getOrdet());
+            String loserString = "YOU LOST!";
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -158,16 +157,16 @@ public class Galgeleg extends AppCompatActivity {
         String updateWord;
         int wrongGuesses;
         if (galgelogik.erSidsteBogstavKorrekt()) {
-            str = "\"" + editText.getText() + "\"" + " var korrekt!";
+            str = "\"" + editText.getText() + "\"" + " was correct!";
             updateWord = galgelogik.getSynligtOrd();
             secretWord.setText(updateWord);
         } else {
             wrongGuesses = galgelogik.getAntalForkerteBogstaver();
-            str = "\"" + editText.getText() + "\"" + " var IKKE korrekt!";
-            str2 = "forkerte svar: "+wrongGuesses + "/7";
+            str = "\"" + editText.getText() + "\"" + " was NOT correct!";
+            str2 = "Wrong Guesses: "+wrongGuesses + "/7";
             nmbrOfWrongGuesses.setText(str2);
 
-            imageView = findViewById(R.id.imageView);
+            imageView = findViewById(R.id.galgeView);
             updateImage(wrongGuesses); //opdaterer galgen
 
         }
