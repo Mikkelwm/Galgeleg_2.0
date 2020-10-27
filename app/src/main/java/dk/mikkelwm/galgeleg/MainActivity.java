@@ -4,9 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button startNewGame, help, highscore;
     Intent newGameIntent, helpIntent, highscoreIntent;
@@ -27,5 +28,16 @@ public class MainActivity extends AppCompatActivity {
         startNewGame.setOnClickListener(this);
         help.setOnClickListener(this);
         highscore.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == startNewGame) {
+            startActivity(newGameIntent);
+        } else if (v == help) {
+            startActivity(helpIntent);
+        } else if (v == highscore) {
+            startActivity(highscoreIntent);
+        }
     }
 }
