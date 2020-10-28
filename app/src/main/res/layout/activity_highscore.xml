@@ -8,10 +8,21 @@
 
     <TextView
         android:id="@+id/highscoreTextView"
-        android:layout_width="315dp"
-        android:layout_height="0dp"
+        android:layout_width="296dp"
+        android:layout_height="320dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="194dp" />
+        tools:layout_editor_absoluteY="141dp" />
+
+    <Button
+        android:id="@+id/goToMainMenu2"
+        android:layout_width="293dp"
+        android:layout_height="116dp"
+        android:layout_marginBottom="180dp"
+        android:background="@drawable/menu2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.652"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

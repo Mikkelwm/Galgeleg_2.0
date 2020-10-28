@@ -13,6 +13,7 @@ public class Highscore extends AppCompatActivity implements View.OnClickListener
     Button back;
     String notImplementedMsg;
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

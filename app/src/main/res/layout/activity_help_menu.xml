@@ -8,22 +8,21 @@
 
     <TextView
         android:id="@+id/helpMsg"
-        android:layout_width="397dp"
-        android:layout_height="289dp"
-        android:layout_marginBottom="172dp"
+        android:layout_width="327dp"
+        android:layout_height="286dp"
+        android:layout_marginBottom="104dp"
         app:layout_constraintBottom_toTopOf="@+id/goToMenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/goToMenu"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="136dp"
-        android:text="Menu"
+        android:layout_width="293dp"
+        android:layout_height="116dp"
+        android:layout_marginBottom="132dp"
+        android:background="@drawable/menu2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.644"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

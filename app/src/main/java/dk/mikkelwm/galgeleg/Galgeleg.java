@@ -37,12 +37,13 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_galgeleg);
 
         galgelogik = new Galgelogik();
+
         editText = findViewById(R.id.editText);
 
         //Knapper
-        newGame = findViewById(R.id.playAgain); //starter nyt spil
-        endGame = findViewById(R.id.endGame); //afslutter spil
-        guess = findViewById(R.id.tryGuessButton); //gætte knappen
+        newGame = findViewById(R.id.playAgain); //start nyt spil
+        endGame = findViewById(R.id.endGame); //afslut spil
+        guess = findViewById(R.id.tryGuessButton); //gæt knappen
 
         //tekst felter der giver brugeren feedback på gæt og progress
         secretWord = findViewById(R.id.secretWord);
@@ -90,7 +91,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
 
         startNewGame(v); //starter nyt spil hvis brugeren trykker "Spil igen"
 
-        //Går til menuen
+        //Tilbage til menuen
         if (v == endGame) {
             finish();
             intent = new Intent(this, MainActivity.class);
@@ -102,7 +103,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         //Nulstiller alle værdier i UI samt sætter udfalds beskeden+nytspil/afslut spil knappernes visibility
         if (v == newGame) {
             galgelogik.startNytSpil();
-            secretWord.setText("Guess again :)");
+            secretWord.setText("Gæt igen :)");
             feedbackText.setText("");
             usedLetters.setText("");
             nmbrOfWrongGuesses.setText("");
@@ -122,14 +123,14 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         usedLetterList = galgelogik.getBrugteBogstaver();
         for (int i = 0; i <= usedLetterList.size() - 1; i++) {
             used.append(usedLetterList.get(i)).append(", ");
-            usedLetters.setText("previous guesses:\n"+used);
+            usedLetters.setText("Tidligere gæt:\n"+used);
         }
     }
 
     //Skjuler keyboard, Udskriver vinder/taber besked, gør nytspil/afslutspil knapperne synlige
     private void isWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
-            String winnerStr = "YOU WON!";
+            String winnerStr = "DU VANDT!";
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -139,8 +140,8 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
             gameOutcomeMsg.setText(winnerStr);
 
         } else if (galgelogik.erSpilletTabt()) {
-            secretWord.setText("The word was: "+galgelogik.getOrdet());
-            String loserString = "YOU LOST!";
+            secretWord.setText("Ordet var: "+galgelogik.getOrdet());
+            String loserString = "DU TABTE!";
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -157,13 +158,13 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         String updateWord;
         int wrongGuesses;
         if (galgelogik.erSidsteBogstavKorrekt()) {
-            str = "\"" + editText.getText() + "\"" + " was correct!";
+            str = "\"" + editText.getText() + "\"" + " var korrekt!";
             updateWord = galgelogik.getSynligtOrd();
             secretWord.setText(updateWord);
         } else {
             wrongGuesses = galgelogik.getAntalForkerteBogstaver();
-            str = "\"" + editText.getText() + "\"" + " was NOT correct!";
-            str2 = "Wrong Guesses: "+wrongGuesses + "/7";
+            str = "\"" + editText.getText() + "\"" + " Var IKKE korrekt!";
+            str2 = "Forkerte gæt: "+wrongGuesses + "/7";
             nmbrOfWrongGuesses.setText(str2);
 
             imageView = findViewById(R.id.galgeView);

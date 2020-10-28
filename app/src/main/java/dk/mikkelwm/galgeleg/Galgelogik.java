@@ -20,7 +20,7 @@ public class Galgelogik {
     private boolean spilletErVundet;
     private boolean spilletErTabt;
 
-    public Galgelogik() {
+    public Galgelogik(){
         muligeOrd.add("bil");
         muligeOrd.add("computer");
         muligeOrd.add("programmering");
@@ -30,6 +30,7 @@ public class Galgelogik {
         muligeOrd.add("skovsnegl");
         muligeOrd.add("solsort");
         muligeOrd.add("tyve");
+
 
         startNytSpil();
     }
@@ -213,7 +214,7 @@ public class Galgelogik {
         startNytSpil();
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         new Galgelogik().hentOrdFraRegneark("2");
-    }
+    }*/
 }
