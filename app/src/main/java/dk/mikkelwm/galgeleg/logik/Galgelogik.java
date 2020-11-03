@@ -1,4 +1,4 @@
-package dk.mikkelwm.galgeleg;
+package dk.mikkelwm.galgeleg.logik;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,31 +10,22 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class Galgelogik {
-    /** AHT afprøvning er muligeOrd synlig på pakkeniveau */
+
     ArrayList<String> muligeOrd = new ArrayList<String>();
-    private String ordet;
     private ArrayList<String> brugteBogstaver = new ArrayList<String>();
+
+    private String ord;
     private String synligtOrd;
     private int antalForkerteBogstaver;
     private boolean sidsteBogstavVarKorrekt;
     private boolean spilletErVundet;
     private boolean spilletErTabt;
 
-    public Galgelogik(){
-        muligeOrd.add("bil");
-        muligeOrd.add("computer");
-        muligeOrd.add("programmering");
-        muligeOrd.add("motorvej");
-        muligeOrd.add("busrute");
-        muligeOrd.add("gangsti");
-        muligeOrd.add("skovsnegl");
-        muligeOrd.add("solsort");
-        muligeOrd.add("tyve");
-
+    public Galgelogik() {
+        muligeOrd.add("røv");
 
         startNytSpil();
     }
-
 
     public ArrayList<String> getBrugteBogstaver() {
         return brugteBogstaver;
@@ -44,8 +35,8 @@ public class Galgelogik {
         return synligtOrd;
     }
 
-    public String getOrdet() {
-        return ordet;
+    public String getOrd() {
+        return ord;
     }
 
     public int getAntalForkerteBogstaver() {
@@ -68,24 +59,23 @@ public class Galgelogik {
         return spilletErTabt || spilletErVundet;
     }
 
-
     public void startNytSpil() {
         brugteBogstaver.clear();
         antalForkerteBogstaver = 0;
         spilletErVundet = false;
         spilletErTabt = false;
         if (muligeOrd.isEmpty()) throw new IllegalStateException("Listen over mulige ord er tom!");
-        ordet = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
-        System.out.println("Nyt spil - det skjulte ord er: "+ordet);
+        ord = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
+        System.out.println("Nyt spil - det skjulte ord er: "+ ord);
         opdaterSynligtOrd();
     }
-
 
     private void opdaterSynligtOrd() {
         synligtOrd = "";
         spilletErVundet = true;
-        for (int n = 0; n < ordet.length(); n++) {
-            String bogstav = ordet.substring(n, n + 1);
+
+        for (int n = 0; n < ord.length(); n++) {
+            String bogstav = ord.substring(n, n + 1);
             if (brugteBogstaver.contains(bogstav)) {
                 synligtOrd = synligtOrd + bogstav;
             } else {
@@ -100,25 +90,17 @@ public class Galgelogik {
         if (bogstav.length() != 1) return;
 
         //str = "Der gættes på bogstavet: " + bogstav;
-
         System.out.println("Der gættes på bogstavet: " + bogstav);
         if (brugteBogstaver.contains(bogstav)) return;
         if (spilletErVundet || spilletErTabt) return;
 
         brugteBogstaver.add(bogstav);
 
-        if (ordet.contains(bogstav)) {
+        if (ord.contains(bogstav)) {
             sidsteBogstavVarKorrekt = true;
-
-            //str += "\nBogstavet var korrekt: " + bogstav;
-
             System.out.println("Bogstavet var korrekt: " + bogstav);
         } else {
-            // Vi gættede på et bogstav der ikke var i ordet.
             sidsteBogstavVarKorrekt = false;
-
-            //str += "\nBogstavet var IKKE korrekt: " + bogstav;
-
             System.out.println("Bogstavet var IKKE korrekt: " + bogstav);
             antalForkerteBogstaver = antalForkerteBogstaver + 1;
             if (antalForkerteBogstaver > 6) {
@@ -128,9 +110,9 @@ public class Galgelogik {
         opdaterSynligtOrd();
     }
 
-    public void logStatus() {
+    /*public void logStatus() {
         System.out.println("---------- ");
-        System.out.println("- ordet (skult) = " + ordet);
+        System.out.println("- ordet (skult) = " + ord);
         System.out.println("- synligtOrd = " + synligtOrd);
         System.out.println("- forkerteBogstaver = " + antalForkerteBogstaver);
         System.out.println("- brugeBogstaver = " + brugteBogstaver);
@@ -138,7 +120,6 @@ public class Galgelogik {
         if (spilletErVundet) System.out.println("- SPILLET ER VUNDET");
         System.out.println("---------- ");
     }
-
 
     public static String hentUrl(String url) throws IOException {
         System.out.println("Henter data fra " + url);
@@ -150,13 +131,12 @@ public class Galgelogik {
             linje = br.readLine();
         }
         return sb.toString();
-    }
-
+    }*/
 
     /**
      * Hent ord fra DRs forside (https://dr.dk)
      */
-    public void hentOrdFraDr() throws Exception {
+    /*public void hentOrdFraDr() throws Exception {
         String data = hentUrl("https://dr.dk");
         //System.out.println("data = " + data);
 
@@ -172,15 +152,14 @@ public class Galgelogik {
                 replaceAll(" [a-zæøå] "," "). // fjern 1-bogstavsord
                 replaceAll(" [a-zæøå][a-zæøå] "," "); // fjern 2-bogstavsord
 
-        System.out.println("data = " + data);
+        //System.out.println("data = " + data);
         System.out.println("data = " + Arrays.asList(data.split("\\s+")));
         muligeOrd.clear();
         muligeOrd.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
 
         System.out.println("muligeOrd = " + muligeOrd);
         startNytSpil();
-    }
-
+    }*/
 
     /**
      * Hent ord og sværhedsgrad fra et online regneark. Du kan redigere i regnearket, på adressen
@@ -188,11 +167,10 @@ public class Galgelogik {
      * @param sværhedsgrader en streng med de tilladte sværhedsgrader - f.eks "3" for at medtage kun svære ord, eller "12" for alle nemme og halvsvære ord
      * @throws Exception
      */
-
-    public void hentOrdFraRegneark(String sværhedsgrader) throws Exception {
+    /*public void hentOrdFraRegneark(String sværhedsgrader) throws Exception {
         String id = "1RnwU9KATJB94Rhr7nurvjxfg09wAHMZPYB3uySBPO6M";
 
-        System.out.println("Henter data som kommasepareret CSV fra regnearket https://docs.google.com/spreadsheets/d/"+id+"/edit?usp=sharing");
+        System.out.println("Henter data som komma,separeret CSV fra regnearket https://docs.google.com/spreadsheets/d/"+id+"/edit?usp=sharing");
 
         String data = hentUrl("https://docs.google.com/spreadsheets/d/" + id + "/export?format=csv&id=" + id);
         int linjeNr = 0;
@@ -212,9 +190,6 @@ public class Galgelogik {
 
         System.out.println("muligeOrd = " + muligeOrd);
         startNytSpil();
-    }
-
-    /*public static void main(String[] args) throws Exception {
-        new Galgelogik().hentOrdFraRegneark("2");
     }*/
+
 }

@@ -1,10 +1,14 @@
 package dk.mikkelwm.galgeleg;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -12,7 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import dk.mikkelwm.galgeleg.logik.Galgelogik;
+import dk.mikkelwm.galgeleg.model.Score;
 
 public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
 
@@ -23,7 +34,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     TextView secretWord;
     TextView feedbackText;
     TextView usedLetters;
-    TextView nmbrOfWrongGuesses;
+    TextView WrongGuesses;
     TextView gameOutcomeMsg;
 
     EditText editText;
@@ -31,67 +42,60 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     ImageView imageView;
     Intent intent;
 
+    ArrayList<Score> highscoreListe = new ArrayList<>();
+    String HIGHSCOREKEY2 = "highscores";
+    String HIGHSCOREKEY = "highscore";
+
+    Score hsStyring;
+    String spillerNavn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galgeleg);
 
         galgelogik = new Galgelogik();
+        hentSpillerNavn();
 
         editText = findViewById(R.id.editText);
 
-        //Knapper
         newGame = findViewById(R.id.playAgain); //start nyt spil
         endGame = findViewById(R.id.endGame); //afslut spil
         guess = findViewById(R.id.tryGuessButton); //gæt knappen
 
-        //tekst felter der giver brugeren feedback på gæt og progress
         secretWord = findViewById(R.id.secretWord);
         feedbackText = findViewById(R.id.guessFeedback);
         usedLetters = findViewById(R.id.usedLetters);
-        nmbrOfWrongGuesses = findViewById(R.id.wrongGuesses);
+        WrongGuesses = findViewById(R.id.wrongGuesses);
         gameOutcomeMsg = findViewById(R.id.gameOutcomeMsg);
 
-        //usynlige indtil spillet har et udfald
         newGame.setVisibility(View.INVISIBLE);
         endGame.setVisibility(View.INVISIBLE);
         gameOutcomeMsg.setVisibility(View.INVISIBLE);
 
-        //sætter det hemmelige ord ved start
         String word = "Ordet er på "+galgelogik.getSynligtOrd().length()+" bogstaver";
         secretWord.setText(word);
 
-        //sætter forkerte svar ved start
         String wrongAnswers = "forkerte svar: 0/7";
-        nmbrOfWrongGuesses.setText(wrongAnswers);
+        WrongGuesses.setText(wrongAnswers);
 
-        //sætter gæt ved start
         String lettersUsed = "Ingen gæt fortaget endnu";
         usedLetters.setText(lettersUsed);
 
-        //Listeners
         guess.setOnClickListener(this);
         newGame.setOnClickListener(this);
         endGame.setOnClickListener(this);
-
-
     }
+
     @Override
     public void onClick(View v) {
-
-        galgelogik.gætBogstav(editText.getText().toString()); //Sender det gættede bogstav til logikken
-
-        guessedLetters(); //Bygger en string ud af de brugte bogstaver og sætter textfield så brugeren kan følge med.
-
-        isGuessCorrect(); //Udskriver en besked til brugeren hvis deres gæt er korrekt/ikke korrekt
-
-        isWinner(v); //holder øje med om brugeren har vundet eller tabt
-
+        galgelogik.gætBogstav(editText.getText().toString()); //Gættet bogstav bliver sendt til galgelogik
+        guessedLetters(); //Laver string af gættede bogstaver.
+        isGuessCorrect(); //Giver besked om gæt er korrekt eller ikke korrekt
+        checkForWinner(v); //Checker om der er en vinder eller taber
         editText.setText(""); //sørger for at edittext bliver clearet efter hvert gæt så spilleren ikke selv skal slette bogstaver efter hver tur.
+        startNewGame(v); //starter nyt spil hvis brugeren trykker "Play igen"
 
-        startNewGame(v); //starter nyt spil hvis brugeren trykker "Spil igen"
-
-        //Tilbage til menuen
         if (v == endGame) {
             finish();
             intent = new Intent(this, MainActivity.class);
@@ -99,23 +103,20 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void startNewGame(View v) {
-        //Kalder startNytSpil metoden
-        //Nulstiller alle værdier i UI samt sætter udfalds beskeden+nytspil/afslut spil knappernes visibility
         if (v == newGame) {
             galgelogik.startNytSpil();
-            secretWord.setText("Gæt igen :)");
+            secretWord.setText("Gæt et bogstav");
             feedbackText.setText("");
             usedLetters.setText("");
-            nmbrOfWrongGuesses.setText("");
-            imageView.setImageResource(R.drawable.galge);
+            WrongGuesses.setText("");
+            imageView.setImageResource(R.drawable.galge);//Sætter galgebilledet til udgangspunkt
 
-            newGame.setVisibility(View.INVISIBLE);
-            endGame.setVisibility(View.INVISIBLE);
-            gameOutcomeMsg.setVisibility(View.INVISIBLE);
+            newGame.setVisibility(View.INVISIBLE);//Gør Play again knappen Usynlig
+            endGame.setVisibility(View.INVISIBLE);//Gør end game knappen Usynlig
+            gameOutcomeMsg.setVisibility(View.INVISIBLE);//Gør Vinder/taber besked Usynlig
         }
     }
 
-    //bygger en string ud af liste for tidligere gæt og sætter tekst i usedLetters textview
     private void guessedLetters() {
         StringBuilder used;
         ArrayList<String> usedLetterList;
@@ -127,32 +128,31 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    //Skjuler keyboard, Udskriver vinder/taber besked, gør nytspil/afslutspil knapperne synlige
-    private void isWinner(View v) {
+    private void checkForWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
-            String winnerStr = "DU VANDT!";
+            String winnerStr = "DU ER EN VINDER!";//Vinder Besked
+            gemInfo();//Gemmer informationer når der er en vinder
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
             gameOutcomeMsg.setVisibility(View.VISIBLE);
-            newGame.setVisibility(View.VISIBLE);
-            endGame.setVisibility(View.VISIBLE);
+            newGame.setVisibility(View.VISIBLE);//Gør Play again knappen synlig
+            endGame.setVisibility(View.VISIBLE);//Gør end game knappen synlig
             gameOutcomeMsg.setText(winnerStr);
 
         } else if (galgelogik.erSpilletTabt()) {
-            secretWord.setText("Ordet var: "+galgelogik.getOrdet());
-            String loserString = "DU TABTE!";
+            secretWord.setText("Ordet var: "+galgelogik.getOrd());
+            String loserString = "DU ER EN TABER!"; //Taber besked
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
             gameOutcomeMsg.setVisibility(View.VISIBLE);
-            newGame.setVisibility(View.VISIBLE);
-            endGame.setVisibility(View.VISIBLE);
+            newGame.setVisibility(View.VISIBLE);//Gør Play again knappen synlig
+            endGame.setVisibility(View.VISIBLE);//Gør end game knappen synlig
             gameOutcomeMsg.setText(loserString);
         }
     }
 
-    //angiver om det bogstav der blev gættet på var korrekt/ukorrekt, hvis ukorrekt kaldes update image metoden i else statement
     private void isGuessCorrect() {
         String str,str2;
         String updateWord;
@@ -165,16 +165,61 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
             wrongGuesses = galgelogik.getAntalForkerteBogstaver();
             str = "\"" + editText.getText() + "\"" + " Var IKKE korrekt!";
             str2 = "Forkerte gæt: "+wrongGuesses + "/7";
-            nmbrOfWrongGuesses.setText(str2);
+            WrongGuesses.setText(str2);
 
             imageView = findViewById(R.id.galgeView);
-            updateImage(wrongGuesses); //opdaterer galgen
-
+            updateImage(wrongGuesses); //Ændrer galgebilledet
         }
         feedbackText.setText(str);
     }
 
-    //opdaterer galgebilledet ved forkerte svar
+    public void gemInfo() {
+        hentHighscore();
+        hsStyring = new Score(galgelogik.getOrd(), spillerNavn, galgelogik.getAntalForkerteBogstaver() + "");
+        highscoreListe.add(hsStyring);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(HIGHSCOREKEY2, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(highscoreListe);
+        editor.putString(HIGHSCOREKEY, json);
+        editor.apply();
+    }
+
+    private void hentHighscore() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(HIGHSCOREKEY2, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(HIGHSCOREKEY, null);
+        Type type = new TypeToken<ArrayList<Score>>() {
+        }.getType();
+        highscoreListe = gson.fromJson(json, type);
+
+        if (highscoreListe == null) {
+            highscoreListe = new ArrayList<>();
+        }
+    }
+
+    public void hentSpillerNavn() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Indtast spiller navn:");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                spillerNavn = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                spillerNavn = "Ikke navngivet";
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
     public void updateImage(int wrongGuesses) {
         switch (wrongGuesses) {
             case 1:

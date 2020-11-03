@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Highscore">
 
-    <TextView
-        android:id="@+id/highscoreTextView"
-        android:layout_width="296dp"
-        android:layout_height="320dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="141dp" />
-
     <Button
         android:id="@+id/goToMainMenu2"
         android:layout_width="293dp"
@@ -25,4 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.652"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/high_score_list"
+        android:layout_width="332dp"
+        android:layout_height="378dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,6 @@ public class HelpMenu extends AppCompatActivity implements View.OnClickListener{
 
         menuButton.setOnClickListener(this);
     }
-
     @Override
     public void onClick(View v) {
         intent = new Intent(this, MainActivity.class);
