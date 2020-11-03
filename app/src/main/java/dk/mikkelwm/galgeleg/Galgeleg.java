@@ -57,6 +57,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         galgelogik = new Galgelogik();
         hentSpillerNavn();
 
+        winnerIntent = new Intent(this,Vinder.class);
         editText = findViewById(R.id.editText);
 
         newGame = findViewById(R.id.playAgain); //start nyt spil
@@ -128,18 +129,21 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+
     private void checkForWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
 
-            String winnerStr = "DU ER EN VINDER!";//Vinder Besked
+            Intent winnerIntent = new Intent(this,Vinder.class);
+            startActivity(winnerIntent);
+
+            /*String winnerStr = "DU ER EN VINDER!";//Vinder Besked
             gemInfo();//Gemmer informationer når der er en vinder
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
             gameOutcomeMsg.setVisibility(View.VISIBLE);
             newGame.setVisibility(View.VISIBLE);//Gør Play again knappen synlig
             endGame.setVisibility(View.VISIBLE);//Gør end game knappen synlig
-            gameOutcomeMsg.setText(winnerStr);
+            gameOutcomeMsg.setText(winnerStr);*/
 
         } else if (galgelogik.erSpilletTabt()) {
             secretWord.setText("Ordet var: "+galgelogik.getOrd());

@@ -9,7 +9,7 @@
         android:roundIcon="@drawable/hangman_bg"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VundetSpil"></activity>
+        <activity android:name=".Vinder"></activity>
         <activity android:name=".Highscore" />
         <activity android:name=".HelpMenu" />
         <activity android:name=".Galgeleg" />
