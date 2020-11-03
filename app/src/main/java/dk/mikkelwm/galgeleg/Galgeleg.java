@@ -40,7 +40,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     EditText editText;
     Galgelogik galgelogik;
     ImageView imageView;
-    Intent intent;
+    Intent intent, winnerIntent,loserIntent;
 
     ArrayList<Score> highscoreListe = new ArrayList<>();
     String HIGHSCOREKEY2 = "highscores";
@@ -130,6 +130,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
 
     private void checkForWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
+
             String winnerStr = "DU ER EN VINDER!";//Vinder Besked
             gemInfo();//Gemmer informationer når der er en vinder
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
