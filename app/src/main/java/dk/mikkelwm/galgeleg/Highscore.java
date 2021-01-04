@@ -44,6 +44,7 @@ public class Highscore extends AppCompatActivity implements View.OnClickListener
         listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, highscoreListe));
         back.setOnClickListener(this);
     }
+
     private void hentHighscore() {
         SharedPreferences sharedPreferences = this.getSharedPreferences(HIGHSCOREKEY2, Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -56,6 +57,7 @@ public class Highscore extends AppCompatActivity implements View.OnClickListener
             highscoreListe = new ArrayList<>();
         }
     }
+
     private void sortHighscores() {
         hentHighscore();
         Collections.sort(highscoreListe, new Comparator<Score>() {

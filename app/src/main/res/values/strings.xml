@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">s176222 Mikkels Galgleleg</string>
+
+    <!-- Strings til knapper -->
+    <string name="title_single">Singleplayer</string>
+    <string name="title_multi">Multiplayer</string>
+
+    <!-- Strings til tekst -->
+    <string name="title_navn">Indtast spiller navn</string>
+    <string name="title_ord">Indtast ordet, som skal gættes</string>
+
+
 </resources>

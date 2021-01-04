@@ -21,6 +21,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import dk.mikkelwm.galgeleg.logik.Galgelogik;
 import dk.mikkelwm.galgeleg.model.Score;
@@ -47,15 +50,17 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     String HIGHSCOREKEY = "highscore";
 
     Score hsStyring;
-    String spillerNavn;
+    String spillerNavn, ordDerSkalGættes;
+    //Spiltyper 1 = singleplayer, spiltype 2 = multiplayer
+    public static int spiltype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galgeleg);
 
+        hentSpilType();
         galgelogik = new Galgelogik();
-        hentSpillerNavn();
 
         winnerIntent = new Intent(this,Vinder.class);
         editText = findViewById(R.id.editText);
@@ -125,7 +130,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         usedLetterList = galgelogik.getBrugteBogstaver();
         for (int i = 0; i <= usedLetterList.size() - 1; i++) {
             used.append(usedLetterList.get(i)).append(", ");
-            usedLetters.setText("Tidligere gæt:\n"+used);
+            usedLetters.setText("Tidligere gæt:\n" + used);
         }
     }
 
@@ -145,7 +150,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
             gameOutcomeMsg.setText(winnerStr);
 
         } else if (galgelogik.erSpilletTabt()) {
-            secretWord.setText("Ordet var: "+galgelogik.getOrd());
+            secretWord.setText("Ordet var: " + galgelogik.getOrd());
             String loserString = "DU ER EN TABER!"; //Taber besked
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -177,6 +182,9 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         feedbackText.setText(str);
     }
 
+    /**
+     * @author
+     */
     public void gemInfo() {
         hentHighscore();
         hsStyring = new Score(galgelogik.getOrd(), spillerNavn, galgelogik.getAntalForkerteBogstaver() + "");
@@ -188,7 +196,9 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         editor.putString(HIGHSCOREKEY, json);
         editor.apply();
     }
-
+    /**
+     * @author
+     */
     private void hentHighscore() {
         SharedPreferences sharedPreferences = this.getSharedPreferences(HIGHSCOREKEY2, Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -202,9 +212,59 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+    public void hentSpilType(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setPositiveButton(R.string.title_single, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Spiller har valgt Singleplayer
+                spiltype = 1;
+                hentSpillerNavn();
+                //TODO ord skal vælges af random fra liste
+
+            }
+        });
+        builder.setNegativeButton(R.string.title_multi, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Spiller har valgt Multiplayer
+                spiltype = 2;
+                skrivOrd();
+                hentSpillerNavn();
+                //TODO ord skal indtastes af spiller
+            }
+        });
+
+        builder.show();
+        // Create the AlertDialog
+       // AlertDialog dialog = builder.create();
+    }
+
+    public void skrivOrd (){
+        AlertDialog.Builder wordBuilder = new AlertDialog.Builder(this);
+        wordBuilder.setTitle(R.string.title_ord);
+        final EditText wordInput = new EditText(this);
+        wordInput.setInputType(InputType.TYPE_CLASS_TEXT);
+        wordBuilder.setView(wordInput);
+        wordBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO Ordet skal sættes til det indtastede
+               ordDerSkalGættes = wordInput.getText().toString();
+            }
+        });
+        wordBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Du kommer tilbage til vælg spiltype dialogen
+                hentSpilType();
+            }
+        });
+        wordBuilder.show();
+    }
+
     public void hentSpillerNavn() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Indtast spiller navn:");
+        builder.setTitle(R.string.title_navn);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
@@ -248,5 +308,12 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
             default:
                 break;
         }
+    }
+    public int getSpiltype(){
+        return spiltype;
+    }
+
+    public String getOrdDerSkalGættes(){
+        return ordDerSkalGættes;
     }
 }

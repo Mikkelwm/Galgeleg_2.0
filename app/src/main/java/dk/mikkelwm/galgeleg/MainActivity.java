@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button startNewGame, help, highscore;
+    Button chooseNewGame, help, highscore;
     Intent newGameIntent, helpIntent, highscoreIntent;
 
     @Override
@@ -21,18 +21,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         helpIntent = new Intent(this, HelpMenu.class);
         highscoreIntent = new Intent(this, Highscore.class);
 
-        startNewGame = findViewById(R.id.startGame);
+        chooseNewGame = findViewById(R.id.startGame);
         help = findViewById(R.id.helpButton);
         highscore = findViewById(R.id.highScore);
 
-        startNewGame.setOnClickListener(this);
+        chooseNewGame.setOnClickListener(this);
         help.setOnClickListener(this);
         highscore.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == startNewGame) {
+        if (v == chooseNewGame) {
             startActivity(newGameIntent);
         } else if (v == help) {
             startActivity(helpIntent);

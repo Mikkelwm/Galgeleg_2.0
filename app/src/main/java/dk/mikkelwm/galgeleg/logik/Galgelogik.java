@@ -9,7 +9,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
+import dk.mikkelwm.galgeleg.Galgeleg;
+
 public class Galgelogik {
+
+    Galgeleg galgeleg;
 
     ArrayList<String> muligeOrd = new ArrayList<String>();
     private ArrayList<String> brugteBogstaver = new ArrayList<String>();
@@ -68,6 +72,17 @@ public class Galgelogik {
         ord = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
         System.out.println("Nyt spil - det skjulte ord er: "+ ord);
         opdaterSynligtOrd();
+
+        /*if(galgeleg.getSpiltype() == 1){
+            if (muligeOrd.isEmpty()) throw new IllegalStateException("Listen over mulige ord er tom!");
+            ord = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
+            System.out.println("Nyt spil - det skjulte ord er: "+ ord);
+            opdaterSynligtOrd();
+        } else if (galgeleg.getSpiltype() == 2){
+            ord = galgeleg.getOrdDerSkalGættes();
+            System.out.println("Nyt spil - det skjulte ord er: "+ ord);
+            opdaterSynligtOrd();
+        }*/
     }
 
     private void opdaterSynligtOrd() {
