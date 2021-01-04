@@ -10,10 +10,11 @@ import java.util.HashSet;
 import java.util.Random;
 
 import dk.mikkelwm.galgeleg.Galgeleg;
+import dk.mikkelwm.galgeleg.InfoActivity;
 
 public class Galgelogik {
 
-    Galgeleg galgeleg;
+    InfoActivity infoActivity;
 
     ArrayList<String> muligeOrd = new ArrayList<String>();
     private ArrayList<String> brugteBogstaver = new ArrayList<String>();
@@ -73,13 +74,18 @@ public class Galgelogik {
         System.out.println("Nyt spil - det skjulte ord er: "+ ord);
         opdaterSynligtOrd();
 
-        /*if(galgeleg.getSpiltype() == 1){
+        //TODO det virker ikke i if-statements
+        /*if(infoActivity.getSpiltype() == 0){
+            brugteBogstaver.clear();
+            antalForkerteBogstaver = 0;
+            spilletErVundet = false;
+            spilletErTabt = false;
             if (muligeOrd.isEmpty()) throw new IllegalStateException("Listen over mulige ord er tom!");
             ord = muligeOrd.get(new Random().nextInt(muligeOrd.size()));
             System.out.println("Nyt spil - det skjulte ord er: "+ ord);
             opdaterSynligtOrd();
-        } else if (galgeleg.getSpiltype() == 2){
-            ord = galgeleg.getOrdDerSkalGættes();
+        } else if (infoActivity.getSpiltype() == 1){
+            ord = infoActivity.getOrdDerSkalGættes();
             System.out.println("Nyt spil - det skjulte ord er: "+ ord);
             opdaterSynligtOrd();
         }*/

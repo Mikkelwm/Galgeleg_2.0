@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        newGameIntent = new Intent(this, Galgeleg.class);
+        newGameIntent = new Intent(this, InfoActivity.class);
         helpIntent = new Intent(this, HelpMenu.class);
         highscoreIntent = new Intent(this, Highscore.class);
 
