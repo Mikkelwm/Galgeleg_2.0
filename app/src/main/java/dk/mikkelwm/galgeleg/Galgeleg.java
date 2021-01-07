@@ -43,14 +43,13 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
     EditText editText;
     Galgelogik galgelogik;
     ImageView imageView;
-    Intent intent, winnerIntent,loserIntent;
+    Intent intent;
 
     ArrayList<Score> highscoreListe = new ArrayList<>();
     String HIGHSCOREKEY2 = "highscores";
     String HIGHSCOREKEY = "highscore";
 
     Score hsStyring;
-    InfoActivity infoActivity;
     String spillerNavn;
 
     @Override
@@ -58,11 +57,9 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galgeleg);
 
-        //hentSpilType();
         hentSpillerNavn();
         galgelogik = new Galgelogik();
 
-        winnerIntent = new Intent(this,Vinder.class);
         editText = findViewById(R.id.editText);
 
         newGame = findViewById(R.id.playAgain); //start nyt spil
@@ -79,7 +76,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         endGame.setVisibility(View.INVISIBLE);
         gameOutcomeMsg.setVisibility(View.INVISIBLE);
 
-        String word = "Ordet er på "+galgelogik.getSynligtOrd().length()+" bogstaver";
+        String word = "Ordet er på "+ galgelogik.getSynligtOrd().length() + " bogstaver";
         secretWord.setText(word);
 
         String wrongAnswers = "forkerte svar: 0/7";
@@ -136,9 +133,8 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
 
     private void checkForWinner(View v) {
         if (galgelogik.erSpilletVundet()) {
-            //gemInfo();//Gemmer informationer når der er en vinder
-            //Intent winnerIntent = new Intent(this,Vinder.class);
-            //startActivity(winnerIntent);
+            Intent winnerIntent = new Intent(this,Vinder.class);
+            startActivity(winnerIntent);
 
             String winnerStr = "DU ER EN VINDER!";//Vinder Besked
             gemInfo();//Gemmer informationer når der er en vinder
@@ -150,6 +146,9 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
             gameOutcomeMsg.setText(winnerStr);
 
         } else if (galgelogik.erSpilletTabt()) {
+            Intent loserIntent = new Intent(this, Taber.class);
+            startActivity(loserIntent);
+
             secretWord.setText("Ordet var: " + galgelogik.getOrd());
             String loserString = "DU ER EN TABER!"; //Taber besked
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

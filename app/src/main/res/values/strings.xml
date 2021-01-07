@@ -8,6 +8,6 @@
     <!-- Strings til tekst -->
     <string name="title_navn">Indtast spiller navn</string>
     <string name="title_ord">Indtast ordet, som skal gættes</string>
-
+    <string name="title_word">Ordet der skulle gættes er/var: </string>
 
 </resources>
