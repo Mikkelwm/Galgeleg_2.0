@@ -95,7 +95,7 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         galgelogik.gætBogstav(editText.getText().toString()); //Gættet bogstav bliver sendt til galgelogik
         guessedLetters(); //Laver string af gættede bogstaver.
         isGuessCorrect(); //Giver besked om gæt er korrekt eller ikke korrekt
-        checkForWinner(v); //Checker om der er en vinder eller taber
+        checkForWinner(); //Checker om der er en vinder eller taber
         editText.setText(""); //sørger for at edittext bliver clearet efter hvert gæt så spilleren ikke selv skal slette bogstaver efter hver tur.
         startNewGame(v); //starter nyt spil hvis brugeren trykker "Play igen"
 
@@ -131,33 +131,14 @@ public class Galgeleg extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void checkForWinner(View v) {
+    private void checkForWinner() {
         if (galgelogik.erSpilletVundet()) {
             Intent winnerIntent = new Intent(this,Vinder.class);
             startActivity(winnerIntent);
-
-            String winnerStr = "DU ER EN VINDER!";//Vinder Besked
             gemInfo();//Gemmer informationer når der er en vinder
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            gameOutcomeMsg.setVisibility(View.VISIBLE);
-            newGame.setVisibility(View.VISIBLE);//Gør Play again knappen synlig
-            endGame.setVisibility(View.VISIBLE);//Gør end game knappen synlig
-            gameOutcomeMsg.setText(winnerStr);
-
         } else if (galgelogik.erSpilletTabt()) {
             Intent loserIntent = new Intent(this, Taber.class);
             startActivity(loserIntent);
-
-            secretWord.setText("Ordet var: " + galgelogik.getOrd());
-            String loserString = "DU ER EN TABER!"; //Taber besked
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-            gameOutcomeMsg.setVisibility(View.VISIBLE);
-            newGame.setVisibility(View.VISIBLE);//Gør Play again knappen synlig
-            endGame.setVisibility(View.VISIBLE);//Gør end game knappen synlig
-            gameOutcomeMsg.setText(loserString);
         }
     }
 
