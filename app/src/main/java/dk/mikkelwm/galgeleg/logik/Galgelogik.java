@@ -17,11 +17,11 @@ public class Galgelogik {
 
     public Galgelogik() {
         muligeOrd.add("røv");
-        /*muligeOrd.add("stativ");
+        muligeOrd.add("stativ");
         muligeOrd.add("kasket");
         muligeOrd.add("info");
         muligeOrd.add("bord");
-        muligeOrd.add("stol");*/
+        muligeOrd.add("stol");
 
         startNytSpil();
     }
